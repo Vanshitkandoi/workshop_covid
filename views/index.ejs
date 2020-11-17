@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Covid website</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@2.8.0"></script>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.15.1/css/all.css"
+        integrity="sha384-vp86vTRFVJgpjF9jiIGPEEqYqlDwgyBgEF109VFjmqGmIY/Y4HV4d3Gp2irVfcrp" crossorigin="anonymous">
+    <style>
+        .jumbotron {
+            background-color: #b8c6db;
+            background-image: linear-gradient(315deg, #b8c6db 0%, #f5f7fa 74%);
+            text-align: center;
+        }
+
+        .country-name {
+            font-size: 30px;
+            text-transform: capitalize;
+            color: rgb(255, 99, 132);
+        }
+
+        .form-control {
+            padding: 0 10px;
+        }
+    </style>
+</head>
+
+<body onload="createChart('<%= date %>','<%= cases %> ')">
+
+    <div class="jumbotron">
+        <h1 class="display-4"> <i style="color: rgb(255, 99, 132);" class="fa fa-virus"></i> Covid Project</h1>
+        <div class="container">
+            <form action="/countrySelect" method="POST">
+                <div class="form-group">
+                    <label for="country">Country select</label>
+                    <select class="form-control" name="country" id="country"
+                        onchange='if(this.value != 0) { this.form.submit(); }'>
+                        <option value="0">Select country</option>
+                        <option value="india">India</option>
+                        <option value="south-africa">South africa</option>
+                        <option value="australia">Australia</option>
+                        <option value="italy">Italy</option>
+                        <option value="switzerland">Switzerland</option>
+                    </select>
+                </div>
+            </form>
+        </div>
+
+        <hr class="my-4">
+        <% if(!country){ %>
+        <p>This Graph will show you the total covid cases from day 1 of the selected country.</p>
+        <% }else{ %>
+        <p>This Graph will show you the total covid cases from day 1 of <span class="country-name"><%= country %></span>
+        </p>
+        <% } %>
+
+        <div class="container">
+            <canvas id="myChart"></canvas>
+        </div>
+    </div>
+
+    <script>
+        function createChart(date, cases) {
+
+            let datearray = date.split(",");
+            let casesarray = cases.split(",")
+
+            var ctx = document.getElementById('myChart').getContext('2d');
+            var chart = new Chart(ctx, {
+                // The type of chart we want to create
+                type: 'line',
+
+                // The data for our dataset
+                data: {
+                    labels: datearray,
+                    datasets: [{
+                        label: 'Covid cases',
+                        backgroundColor: 'rgb(255, 99, 132)',
+                        borderColor: 'rgb(255, 99, 132)',
+                        data: casesarray
+                    }]
+                }
+            });
+        }
+    </script>
+
+
+</body>
+
+</html>
